@@ -36,95 +36,49 @@ test('Create a repository via API and verify in UI', async ({ page })=> {
                     ]
                 );
 
-            expect(topicsResponse.names)
-                .toContain('playwright');
-
-            console.log(
-                'Topics updated:',
-                topicsResponse.names
-            );
+            expect(topicsResponse.names).toContain('playwright');
+            console.log('Topics updated:',topicsResponse.names);
 
             // PATCH
 
-            const patchResponse =
-                await updateDescription(
+            const patchResponse =await updateDescription(
                     token,
                     username,
                     repoName,
                     'Updated description via PATCH'
                 );
 
-            expect(
-                patchResponse.description
-            ).toBe(
-                'Updated description via PATCH'
-            );
-
-            console.log(
-                'Description updated successfully'
-            );
+            expect(patchResponse.description).toBe('Updated description via PATCH');
+            console.log('Description updated successfully');
 
             // UI LOGIN
 
-            const loginPage =
-                new LoginPage(page);
+            const loginPage =new LoginPage(page);
+            await loginPage.navigate(githubUrl);
 
-            await loginPage.navigate(
-                githubUrl
-            );
+            await expect(page).toHaveTitle(/Sign in to GitHub/);
 
-            await expect(page)
-                .toHaveTitle(
-                    /Sign in to GitHub/
-                );
+            await loginPage.login(username,password);
 
-            await loginPage.login(
-                username,
-                password
-            );
-
-            console.log(
-                'Logged into GitHub UI'
-            );
+            console.log('Logged into GitHub UI');
 
             // OPEN REPO
 
-            await page.goto(
-                repo.html_url
-            );
+            await page.goto(repo.html_url);
 
             // VERIFY UI
 
-            await expect(
-                page.locator(
-                    'strong[itemprop="name"]'
-                )
-            ).toHaveText(repoName);
+            await expect(page.locator('strong[itemprop="name"]')).toHaveText(repoName);
 
-            console.log(
-                'Repository verified in UI'
-            );
+            console.log('Repository verified in UI');
 
         } finally {
 
-            await deleteRepo(
-                token,
-                username,
-                repoName
-            );
+            await deleteRepo(token,username,repoName);
         }
 
-        const status =
-            await verifyRepoDeleted(
-                token,
-                username,
-                repoName
-            );
-
-        console.log(
-            'Deletion verification status:',
-            status
-        );
+        const status = await verifyRepoDeleted(token,username,repoName);
+        console.log('Deletion verification status:', status);
     }
 );
 
