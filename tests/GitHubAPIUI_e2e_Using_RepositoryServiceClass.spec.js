@@ -18,7 +18,16 @@ test('Create repository via API and verify in UI',async ({ page }) => {
             //POST
             const repo = await repoService.create(repoName);
             expect(repo.name).toBe(repoName);
-            await repoService.get(repoName);
+            console.log("Repo Created");
+            
+            //GET
+            const repoDetails = await repoService.get(repoName);
+            console.log("Repo Details: \n", 
+                "Repository ID: " + repoDetails.id +"\n", 
+                "Repo Name: " + repoDetails.name +"\n", 
+                "Repository Full Name"+repoDetails.full_name);
+
+
 
             //PUT
             const topics =await repoService.updateTopics(repoName,
