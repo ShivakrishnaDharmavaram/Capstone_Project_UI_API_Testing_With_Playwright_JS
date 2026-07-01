@@ -9,7 +9,7 @@ A comprehensive test automation framework for GitHub using Playwright that cover
 1. [Project Overview](#project-overview)
 2. [Setup & Installation](#setup--installation)
 3. [Project Structure](#project-structure)
-4. [Test Coverage (16 Points)](#test-coverage-16-points)
+4. [Test Coverage](#test-coverage)
 5. [Running Tests](#running-tests)
 6. [Reports & Logging](#reports--logging)
 
@@ -320,11 +320,7 @@ const token = process.env.GITHUB_TOKEN;
 
 **Usage:**
 ```javascript
-import NewFileDetails from '../files/NewFileDetails.json';
-await newRepoHomePage.fillFileDetails(
-    NewFileDetails.fileName,
-    NewFileDetails.description
-);
+import * as updatedtestData  from '../files/updatedtestData.json';
 ```
 
 #### Test Data Generation
@@ -1061,18 +1057,6 @@ npx playwright test --grep @smoke    # ✗ Fails
 3. Use logger instead of console.log
 4. Add tags to new tests
 5. Update this README for new test files
-
----
-
-## License
-
-MIT
-
----
-
-## Contact
-
-For questions or issues, please refer to the project documentation or contact the development team.
 
 ---
 
