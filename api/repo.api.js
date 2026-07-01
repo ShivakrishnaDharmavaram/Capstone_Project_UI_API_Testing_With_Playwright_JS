@@ -43,6 +43,7 @@
 
 import { expect } from '@playwright/test';
 import { getGithubContext } from './github.client';
+import logger from '../utils/logger.js';
 
 export async function createRepo(token, repoName) {
 
@@ -60,7 +61,7 @@ export async function createRepo(token, repoName) {
 
     const body = await response.json();
 
-    console.log(`Repository created: ${repoName}`);
+    logger.info(`Repository created: ${repoName}`);
 
     return body;
 }
@@ -138,7 +139,7 @@ export async function deleteRepo(
 
     expect(response.status()).toBe(204);
 
-    console.log(`Repository deleted: ${repoName}`);
+    logger.info(`Repository deleted: ${repoName}`);
 }
 
 export async function verifyRepoDeleted(

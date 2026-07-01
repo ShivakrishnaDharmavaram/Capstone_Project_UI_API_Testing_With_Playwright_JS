@@ -1,5 +1,9 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
+
+const authDir = path.resolve('playwright/.auth');
+const storageStatePath = path.join(authDir, 'user.json');
 
 /**
  * Read environment variables from file.
@@ -23,23 +27,37 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-  ['html'],
-  ['allure-playwright']],
+  reporter:   
+[
+    ['html'],
+    ['allure-playwright',
+    {
+     resultsDir: 
+      'allure-results' }
+],],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-  },
+    trace: 'retain-on-failure', //Record a trace for every run, but keep it only for runs that failed. A failed run's trace is kept even when a later retry passes.
+  }, //'on-first-retry',
 
   /* Configure projects for major browsers */
   projects: [
     {
+      name: 'setup',
+      testMatch: /auth\.setup\.js/,
+      testDir: './auth',
+    },
+    {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: storageStatePath,
+      },
+      dependencies: ['setup'],
     },
 
     // {

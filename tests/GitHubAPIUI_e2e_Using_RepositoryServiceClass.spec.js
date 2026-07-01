@@ -1,9 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { RepositoryService } from '../api/services/RepositoryService';
-import { LoginPage } from '../pages/LoginPage';
+import { MyRepositoriesPage } from '../pages/MyRepositoriesPage';
+import logger from '../utils/logger.js';
+import { createAllureLogger } from '../utils/allureLogger.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
+
+createAllureLogger();
 
 test('Create repository via API and verify in UI',async ({ page }) => {
 
@@ -18,14 +22,11 @@ test('Create repository via API and verify in UI',async ({ page }) => {
             //POST
             const repo = await repoService.create(repoName);
             expect(repo.name).toBe(repoName);
-            console.log("Repo Created");
+            logger.info('Repo Created');
             
             //GET
             const repoDetails = await repoService.get(repoName);
-            console.log("Repo Details: \n", 
-                "Repository ID: " + repoDetails.id +"\n", 
-                "Repo Name: " + repoDetails.name +"\n", 
-                "Repository Full Name"+repoDetails.full_name);
+            logger.info(`Repo Details: Repository ID: ${repoDetails.id}, Repo Name: ${repoDetails.name}, Repository Full Name: ${repoDetails.full_name}`);
 
 
 
@@ -45,15 +46,13 @@ test('Create repository via API and verify in UI',async ({ page }) => {
 
             expect(updatedRepo.description).toBe('Updated via PATCH');
 
-            const loginPage =new LoginPage(page);
-
-            await loginPage.navigate(githubUrl);
-
-            await loginPage.login(username,password);
-
+            //UI
             await page.goto(repo.html_url);
 
-            await expect(page.locator('strong[itemprop="name"]')).toHaveText(repoName);
+            const myRepositoriesPage = new MyRepositoriesPage(page);
+
+            // await expect(page.locator('strong[itemprop="name"]')).toHaveText(repoName);
+            await expect(myRepositoriesPage.repoNameLabel).toHaveText(repoName);
 
         } finally {
 

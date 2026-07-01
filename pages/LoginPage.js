@@ -17,8 +17,6 @@ export class LoginPage {
             el.value = username;
             el.dispatchEvent(new Event('input', { bubbles: true }));
         }, username);
-        //Wait for 3 seconds
-        await this.page.waitForTimeout(3000);
         
         await this.passwordInput.evaluate((el, password) => {
             el.value = password;

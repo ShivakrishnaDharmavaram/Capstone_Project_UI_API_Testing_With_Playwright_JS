@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report",
+    "allure": "allure serve allure-results"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -14,11 +19,14 @@
     "dotenv": "^17.4.2",
     "exceljs": "^4.4.0",
     "parse": "^8.6.0",
-    "playwright": "^1.61.0"
+    "winston": "^3.19.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.0",
+    "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.3",
-    "allure-playwright": "^3.10.0"
+    "allure": "^3.14.0",
+    "allure-commandline": "^2.43.0",
+    "allure-playwright": "^3.10.0",
+    "playwright": "^1.60.0"
   }
 }

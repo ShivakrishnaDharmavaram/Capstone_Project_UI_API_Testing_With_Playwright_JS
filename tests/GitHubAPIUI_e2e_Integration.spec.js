@@ -4,8 +4,12 @@ import {createRepo, getRepo, updateTopics, updateDescription,
 import {LoginPage} from '../pages/LoginPage';
 import {HomePage} from '../pages/HomePage';
 import { MyRepositoriesPage } from '../pages/MyRepositoriesPage';
+import logger from '../utils/logger.js';
+import { createAllureLogger } from '../utils/allureLogger.js';
 import dotenv from 'dotenv';
 dotenv.config();
+
+createAllureLogger();
 
 test('Create a repository via API and verify in UI', async ({ page })=> {
         const token = process.env.GITHUB_TOKEN;
@@ -20,12 +24,12 @@ test('Create a repository via API and verify in UI', async ({ page })=> {
             repo = await createRepo(token, repoName);
             expect(repo.name)
                 .toBe(repoName);
-            console.log(`Repository '${repoName}' created successfully`);
+            logger.info(`Repository '${repoName}' created successfully`);
 
             // GET
             const repoDetails =await getRepo(token,username,repoName);
             expect(repoDetails.name).toBe(repoName);
-            console.log(`Repository '${repoName}' verified`);
+            logger.info(`Repository '${repoName}' verified`);
 
             // PUT
             const topicsResponse =await updateTopics(token,username,repoName,
@@ -37,7 +41,7 @@ test('Create a repository via API and verify in UI', async ({ page })=> {
                 );
 
             expect(topicsResponse.names).toContain('playwright');
-            console.log('Topics updated:',topicsResponse.names);
+            logger.info('Topics updated:' + JSON.stringify(topicsResponse.names));
 
             // PATCH
 
@@ -49,18 +53,7 @@ test('Create a repository via API and verify in UI', async ({ page })=> {
                 );
 
             expect(patchResponse.description).toBe('Updated description via PATCH');
-            console.log('Description updated successfully');
-
-            // UI LOGIN
-
-            const loginPage =new LoginPage(page);
-            await loginPage.navigate(githubUrl);
-
-            await expect(page).toHaveTitle(/Sign in to GitHub/);
-
-            await loginPage.login(username,password);
-
-            console.log('Logged into GitHub UI');
+            logger.info('Description updated successfully');
 
             // OPEN REPO
 
@@ -70,7 +63,7 @@ test('Create a repository via API and verify in UI', async ({ page })=> {
 
             await expect(page.locator('strong[itemprop="name"]')).toHaveText(repoName);
 
-            console.log('Repository verified in UI');
+            logger.info('Repository verified in UI');
 
         } finally {
 
@@ -78,7 +71,7 @@ test('Create a repository via API and verify in UI', async ({ page })=> {
         }
 
         const status = await verifyRepoDeleted(token,username,repoName);
-        console.log('Deletion verification status:', status);
+        logger.info(`Deletion verification status: ${status}`);
     }
 );
 

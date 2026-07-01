@@ -4,7 +4,8 @@ export class MyRepositoriesPage {
 
         // Locators for MyRepositoriesPage elements
         this.myRepositories = page.getByRole('link', { name: 'My repositories' });
-        this.myRepoName = page.locator('//*[text()="Playwright_Project_20260127"]');
+        this.repoNameLabel = page.locator('strong[itemprop="name"]');
+        this.myRepoName = page.locator('//*[text()="Capstone_Project_UI_API_Testing_With_Playwright_JS"]');
         this.newRepositoryButton = page.getByText('New repository');
     }
 
@@ -19,6 +20,9 @@ export class MyRepositoriesPage {
                 
     }
 
+    // async validateRepositoryName(expectedRepoName) {
+    //     await expect(this.repoNameLabel).toHaveText(expectedRepoName);
+    // }
     // Method to navigate to create new repository page
     async navigateToCreateNewRepository() {
         await this.newRepositoryButton.click();        
