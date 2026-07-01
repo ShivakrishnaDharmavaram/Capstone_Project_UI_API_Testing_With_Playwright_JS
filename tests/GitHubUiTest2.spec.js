@@ -31,7 +31,7 @@ test.describe('GitHub UI Tests', () => {
         await context.close();
     });
 
-    test('TC-01: Verify user can login successfully', async () => {
+    test('TC-01: Verify user can login successfully @smoke @ui', async () => {
         const login = new LoginPage(page);
 
         await login.navigate(url);
@@ -44,7 +44,7 @@ test.describe('GitHub UI Tests', () => {
         logger.info(`URL after using stored session: ${currentUrl}`);
     });
 
-    test('TC-02: Verify user can navigate to repositories page', async () => {
+    test('TC-02: Verify user can navigate to repositories page @smoke @ui', async () => {
         const home = new HomePage(page);
         // // Verify that the user is on able to see dashboard after login
         // const isDashboardVisible = await homePage.isDashboardVisible();
@@ -61,7 +61,7 @@ test.describe('GitHub UI Tests', () => {
         const RepositoriesUrl = await page.url();
         logger.info(`URL after navigating to Repositories page: ${RepositoriesUrl}`);
     });
-    test('TC-03: Verify that the user can navigate to the My Repositories from repositories page', async () => {
+    test('TC-03: Verify that the user can navigate to the My Repositories from repositories page @smoke @ui', async () => {
         const myRepositories = new MyRepositoriesPage(page);
         // Open the My Repositories section
         await myRepositories.navigateToMyRepositories();
@@ -86,7 +86,7 @@ test.describe('GitHub UI Tests', () => {
 
     });
 
-    test('TC-04: Verify that the user is able to create new repository', async () => {
+    test('TC-04: Verify that the user is able to create new repository @smoke @ui', async () => {
         const newRepoCreationPage = new NewRepoCreationPage(page);
         // Navigate to create new repository page
         await newRepoCreationPage.navigateToCreateNewRepository();
@@ -114,7 +114,7 @@ test.describe('GitHub UI Tests', () => {
         
     });
 
-    test('TC-05: Verify that the user is able to create a new file in new repository', async () => {
+    test('TC-05: Verify that the user is able to create a new file in new repository @ui', async () => {
         const newRepoHomePage = new NewRepoHomePage(page);
 
         //Select the option to create a new file
