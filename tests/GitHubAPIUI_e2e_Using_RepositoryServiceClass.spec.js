@@ -3,6 +3,7 @@ import { RepositoryService } from '../api/services/RepositoryService';
 import { MyRepositoriesPage } from '../pages/MyRepositoriesPage';
 import logger from '../utils/logger.js';
 import { createAllureLogger } from '../utils/allureLogger.js';
+import * as updatedtestData from '../utils/updatedtestData.json';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -31,13 +32,7 @@ test('Create repository via API and verify in UI',async ({ page }) => {
 
 
             //PUT
-            const topics =await repoService.updateTopics(repoName,
-                    [
-                        'playwright',
-                        'api',
-                        'testing'
-                    ]
-                );
+            const topics =await repoService.updateTopics(repoName, updatedtestData.names);
             expect(topics.names).toContain('playwright');
 
             //PATCH
