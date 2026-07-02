@@ -105,7 +105,7 @@ test.describe('GitHub UI Tests', () => {
         await page.waitForLoadState('domcontentloaded');
         // Click on Create repository button
         await newRepoCreationPage.clickCreateRepository();
-        await page.waitForTimeout(2000);
+        // await page.waitForTimeout(2000);
         await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
         const newRepoUrl = await page.url();
         logger.info(`URL after creating new repository: ${newRepoUrl}`);
@@ -129,10 +129,12 @@ test.describe('GitHub UI Tests', () => {
 
         // await page.waitForLoadState('domcontentloaded');
         // which is opened a dialog box where in that I need to click on commit changes button again to commit the changes.
+        // Event driven programming approach to handle the dialog box that appears after clicking on commit changes button.
         await page.once('dialog', async dialog => {
             logger.info(`Dialog message: ${dialog.message()}`);
             await dialog.accept();
         });
+
         // Click on Commit changes button
         await newRepoHomePage.clickCommitChanges();
         // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });

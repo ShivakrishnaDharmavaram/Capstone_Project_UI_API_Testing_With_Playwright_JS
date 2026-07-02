@@ -32,7 +32,7 @@ test('Create repository via API and verify in UI',async ({ page }) => {
 
 
             //PUT
-            const topics =await repoService.updateTopics(repoName, updatedtestData.names);
+            const topics =await repoService.updateTopics(repoName, updatedtestData.topics.names);
             expect(topics.names).toContain('playwright');
 
             //PATCH

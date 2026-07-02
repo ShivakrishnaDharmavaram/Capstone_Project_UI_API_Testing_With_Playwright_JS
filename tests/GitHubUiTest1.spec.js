@@ -1,20 +1,17 @@
 import {test, expect} from '@playwright/test'; 
 import path from 'path';
-import {LoginPage} from '../pages/LoginPage.js';
-import {HomePage} from '../pages/HomePage.js';
-import { MyRepositoriesPage } from '../pages/MyRepositoriesPage.js';
-import { NewRepoCreationPage } from '../pages/NewRepoCreationPage.js';
-import {NewRepoHomePage} from '../pages/NewRepoHomePage.js';
+import {LoginPage} from '../pages/LoginPage';
+import {HomePage} from '../pages/HomePage';
+import { MyRepositoriesPage } from '../pages/MyRepositoriesPage';
+import { NewRepoCreationPage } from '../pages/NewRepoCreationPage';
+import {NewRepoHomePage} from '../pages/NewRepoHomePage';
 import NewFileDetails from '../files/NewFileDetails.json';
 import * as updateTestData from '../utils/testData.js';
-import logger from '../utils/logger.js';
-import { createAllureLogger } from '../utils/allureLogger.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
 test.describe.configure({mode: 'serial'});
 test.describe('GitHub UI Tests', () => {
-    createAllureLogger();
     let context;
     let page;
     const url = process.env.GITHUB_URL || 'https://github.com';
@@ -40,7 +37,7 @@ test.describe('GitHub UI Tests', () => {
         await expect(page).toHaveURL(/https:\/\/github\.com\/(?!login)/);
 
         const currentUrl = await login.getCurrentURL();
-        logger.info(`URL after using stored session: ${currentUrl}`);
+        console.log("URL after using stored session:", currentUrl);
     });
 
     test('TC-02: Verify user can navigate to repositories page', async () => {
@@ -51,14 +48,14 @@ test.describe('GitHub UI Tests', () => {
         // Click on the dashboard element
         await home.dashboardClick();
         await expect(page).toHaveURL('https://github.com/');
-        logger.info('Dashboard clicked successfully');
+        console.log("Dashboard clicked successfully");
         const homepageUrl = await page.url();
-        logger.info(`URL after clicking dashboard: ${homepageUrl}`);
+        console.log("URL after clicking dashboard:", homepageUrl);
         // Navigate to the Repositories page
         await home.navigateToRepositories();
         await expect(page).toHaveURL('https://github.com/repos');
         const RepositoriesUrl = await page.url();
-        logger.info(`URL after navigating to Repositories page: ${RepositoriesUrl}`);
+        console.log("URL after navigating to Repositories page:", RepositoriesUrl);
     });
     test('TC-03: Verify that the user can navigate to the My Repositories from repositories page', async () => {
         const myRepositories = new MyRepositoriesPage(page);
@@ -66,11 +63,11 @@ test.describe('GitHub UI Tests', () => {
         await myRepositories.navigateToMyRepositories();
         const currentUrl1 = await page.url();
         await expect(page).toHaveURL('https://github.com/repos');
-        logger.info(`URL after navigating to My Repositories section: ${currentUrl1}`); 
+        console.log("URL after navigating to My Repositories section:", currentUrl1); 
         
         await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
         const isRepoVisible = await myRepositories.isMyRepoVisible();
-        logger.info(`Is the specified repository visible? ${isRepoVisible}`);
+        console.log("Is the specified repository visible?", isRepoVisible);
         // expect(isRepoVisible).toBeTruthy();
         await page.waitForLoadState('domcontentloaded');
 
@@ -92,7 +89,7 @@ test.describe('GitHub UI Tests', () => {
         await page.waitForLoadState('domcontentloaded');
         await expect(page).toHaveURL('https://github.com/new');
         const newRepoCreationPageUrl = await page.url();
-        logger.info(`2.URL after navigating to new repository creation page: ${newRepoCreationPageUrl}`);
+        console.log("2.URL after navigating to new repository creation page:", newRepoCreationPageUrl);
         const repoData = updateTestData.createRepoPayload();
         // Fill the fields to create a new repository
         await newRepoCreationPage.createNewRepository(repoData);
@@ -104,10 +101,10 @@ test.describe('GitHub UI Tests', () => {
         await page.waitForLoadState('domcontentloaded');
         // Click on Create repository button
         await newRepoCreationPage.clickCreateRepository();
-
+        // await page.waitForTimeout(2000);
         await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
         const newRepoUrl = await page.url();
-        logger.info(`URL after creating new repository: ${newRepoUrl}`);
+        console.log("URL after creating new repository:", newRepoUrl);
         await expect(page).toHaveURL(newRepoUrl);
         expect(newRepoUrl).toBe(`https://github.com/${username}/${repoData.name}`)
         
@@ -120,7 +117,7 @@ test.describe('GitHub UI Tests', () => {
         await newRepoHomePage.selectNewFileCreation();
         await page.waitForLoadState('domcontentloaded');
         const filecreationUrl = await page.url();
-        logger.info(`URL after clicking on create new file option: ${filecreationUrl}`);
+        console.log("URL after clicking on create new file option:", filecreationUrl);
         await expect(page).toHaveURL(filecreationUrl);
 
         // Fill the file name and content for the new file
@@ -131,12 +128,12 @@ test.describe('GitHub UI Tests', () => {
         // await page.waitForLoadState('domcontentloaded');
         // which is opened a dialog box where in that I need to click on commit changes button again to commit the changes.
         await page.once('dialog', async dialog => {
-            logger.info(`Dialog message: ${dialog.message()}`);
+            console.log(`Dialog message: ${dialog.message()}`);
             await dialog.accept();
         });
         // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
         const afterCommitUrl = await page.url();
-        logger.info(`URL after committing changes: ${afterCommitUrl}`);
+        console.log("URL after committing changes:", afterCommitUrl);
         // await expect(page).toHaveURL(afterCommitUrl);        
         
     });
